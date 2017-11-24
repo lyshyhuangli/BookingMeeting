@@ -8,19 +8,18 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GetMyBeingMeetingResp extends CommonResult
+public class GetMyBedMeetingResp  extends CommonResult
 {
+    private List<MyMeetingInfoRecord> myBedMeetingInfo = new LinkedList<MyMeetingInfoRecord>();
 
-    private List<MyMeetingInfoRecord> myBeingMeetingInfo = new LinkedList<MyMeetingInfoRecord>();
-
-    public List<MyMeetingInfoRecord> getMyBeingMeetingInfo()
+    public List<MyMeetingInfoRecord> getMyBedMeetingInfo()
     {
-        return myBeingMeetingInfo;
+        return myBedMeetingInfo;
     }
 
-    public void setMyBeingMeetingInfo(List<MyMeetingInfoRecord> myBeingMeetingInfo)
+    public void setMyBedMeetingInfo(List<MyMeetingInfoRecord> myBedMeetingInfo)
     {
-        this.myBeingMeetingInfo = myBeingMeetingInfo;
+        this.myBedMeetingInfo = myBedMeetingInfo;
     }
 
     public String toString()
@@ -28,5 +27,4 @@ public class GetMyBeingMeetingResp extends CommonResult
         String str = ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
         return str;
     }
-
 }

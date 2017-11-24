@@ -2,14 +2,8 @@ package com.api.restfulApi;
 
 import com.api.common.ResultCode;
 import com.api.entity.*;
-import com.api.request.GetMeetingInfoByIdReq;
-import com.api.request.GetMyBeingMeetingReq;
-import com.api.request.GetMyMeetingRoomByPhoneReq;
-import com.api.request.InsertPublishMeetingReq;
-import com.api.response.GetMeetingInfoByIdResp;
-import com.api.response.GetMyBeingMeetingResp;
-import com.api.response.GetMyMeetingRoomByPhoneResp;
-import com.api.response.InsertPublishMeetingResp;
+import com.api.request.*;
+import com.api.response.*;
 import com.api.service.PublishMeetingRoomService;
 import com.api.service.UserDepMeetingService;
 import com.api.utils.CommonUtils;
@@ -20,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -183,13 +178,13 @@ public class PublishMeetingRoomController
     }
 
     /**
-     * 根据Id查询会议信息
+     * 获取要开的会议信息
      *
      * @param req
      * @return
      */
-    @RequestMapping(value = "/getMyMeeting", method = {RequestMethod.POST})
-    public GetMyBeingMeetingResp getMyMeeting(@RequestBody GetMyBeingMeetingReq req)
+    @RequestMapping(value = "/getMyBingMeeting", method = {RequestMethod.POST})
+    public GetMyBeingMeetingResp getMyBingMeeting(@RequestBody GetMyBeingMeetingReq req)
     {
         GetMyBeingMeetingResp resp = new GetMyBeingMeetingResp();
         resp.setResultCode(ResultCode.SUCCESS.getCode());
@@ -217,17 +212,90 @@ public class PublishMeetingRoomController
         String date2 = CommonUtils.getSpecifiedDayAfter(1);
         String date3 = CommonUtils.getSpecifiedDayAfter(2);
 
-        List<MyMeetingInfoRecord> result = publishMeetingRoomService.getMyBeingMeeting(req.getPhone(), date1, date2, date3, String.valueOf(userInfo.getId()));
+        //获取
+        List<MyMeetingInfoRecord> result = publishMeetingRoomService.getMyBeingMeeting(req.getPhone(),
+                date1, date2, date3, String.valueOf(userInfo.getId()));
         logger.info("result:" + result);
         List<MyMeetingInfoRecord> temp = new ArrayList<MyMeetingInfoRecord>();
-        if(null != result)
+        if (null != result)
         {
+            for (MyMeetingInfoRecord m : result)
+            {
+                String id = m.getPerson();
+                String[] ids = id.split(",");
+                List l = Arrays.asList(ids);
+                if (l.contains(userInfo.getId()))
+                {
+                    temp.add(m);
+                }
 
+            }
+        }
+
+        resp.setMyBeingMeetingInfo(temp);
+        return resp;
+
+    }
+
+    /**
+     * 获取已经开完的会议
+     *
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/getMyBedMeeting", method = {RequestMethod.POST})
+    public GetMyBedMeetingResp getMyBedMeeting(@RequestBody GetMyBedMeetingReq req)
+    {
+        GetMyBedMeetingResp resp = new GetMyBedMeetingResp();
+        resp.setResultCode(ResultCode.SUCCESS.getCode());
+        resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.SUCCESS.getCode())));
+
+        if (null == req)
+        {
+            resp.setResultCode(ResultCode.COMMON_REQ_NULL.getCode());
+            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_REQ_NULL.getCode())));
+            return resp;
+        }
+
+        UserDepMeetingRecord userInfo = userDepMeetingService.getUserInfoByPhone(req.getPhone());
+        if (null != userInfo)
+        {
+            logger.info("result:" + userInfo.toString());
+            resp.setResultCode(ResultCode.COMMON_DB_OPERATE_ERROR.getCode());
+            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_DB_OPERATE_ERROR.getCode())));
+            return resp;
 
         }
 
-        resp.setMyMeetingInfo(result);
+        logger.info("req is " + req.toString());
+        String date1 = CommonUtils.getSpecifiedDayAfter(0);
+        String date2 = CommonUtils.getSpecifiedDayAfter(1);
+        String date3 = CommonUtils.getSpecifiedDayAfter(2);
+
+        //获取
+        List<MyMeetingInfoRecord> result = publishMeetingRoomService.getMyBedMeeting(req.getPhone(),
+                date1, date2, date3, String.valueOf(userInfo.getId()),req.getCount());
+        logger.info("result:" + result);
+        List<MyMeetingInfoRecord> temp = new ArrayList<MyMeetingInfoRecord>();
+        if (null != result)
+        {
+            for (MyMeetingInfoRecord m : result)
+            {
+                String id = m.getPerson();
+                String[] ids = id.split(",");
+                List l = Arrays.asList(ids);
+                if (l.contains(userInfo.getId()))
+                {
+                    temp.add(m);
+                }
+
+            }
+        }
+
+        resp.setMyBedMeetingInfo(temp);
         return resp;
+
+
 
     }
 

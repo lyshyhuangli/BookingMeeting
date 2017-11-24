@@ -46,4 +46,18 @@ public interface PublishMeetingRoomService
     List<MyMeetingInfoRecord> getMyBeingMeeting(
             String bookUser, String date1, String date2, String date3, String personId
     );
+
+    /**
+     * 获取跟我相关的已经完成的会议信息
+     * @param bookUser
+     * @param date1
+     * @param date2
+     * @param date3
+     * @param personId
+     * @return
+     */
+    List<MyMeetingInfoRecord> getMyBedMeeting( String bookUser,
+                                              String date1,  String date2,
+                                              String date3, String personId,int count);
+
 }

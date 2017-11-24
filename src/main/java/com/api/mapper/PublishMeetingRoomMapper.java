@@ -49,4 +49,19 @@ public interface PublishMeetingRoomMapper
                                           @Param("date1") String date1, @Param("date2") String date2,
                                           @Param("date3") String date3, @Param("personId") String personId);
 
+    /**
+     * 获取跟我相关的已经完成的会议信息
+     * @param bookUser
+     * @param date1
+     * @param date2
+     * @param date3
+     * @param personId
+     * @return
+     */
+    List<MyMeetingInfoRecord> getMyBedMeeting(@Param("bookUser") String bookUser,
+                                                @Param("date1") String date1, @Param("date2") String date2,
+                                                @Param("date3") String date3, @Param("personId") String personId,
+                                                @Param("count") int count);
+
+
 }
