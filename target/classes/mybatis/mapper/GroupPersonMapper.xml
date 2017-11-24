@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.mapper.GroupPersonMapper">
+    <resultMap id="BaseResultMap" type="com.api.entity.GroupPersonRecord">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="userPhone" jdbcType="VARCHAR" property="userPhone"/>
+        <result column="groupName" jdbcType="VARCHAR" property="groupName"/>
+        <result column="groupUserId" jdbcType="VARCHAR" property="groupUserId"/>
+        <result column="groupUserName" jdbcType="VARCHAR"
+                property="groupUserName"/>
+    </resultMap>
+
+    <select id="getGroupPersonMapperById"
+            resultType="com.api.entity.GroupPersonRecord">
+        select
+        *
+        from
+        tb_groupperson where id = #{id}
+    </select>
+
+    <update id="updateGroupPersonMapperById">
+      UPDATE  tb_groupperson set userPhone = #{userPhone} , groupName = #{groupName} ,
+       groupUserId = #{groupUserId} , groupUserName = #{groupUserName}
+      where id  =  #{id}
+    </update>
+
+    <select id="getAllGroupPersonByUserPhone"
+            resultType="com.api.entity.GroupPersonRecord">
+        select
+        *
+        from
+        tb_groupperson where userPhone = #{userPhone}
+    </select>
+
+</mapper>
