@@ -69,8 +69,8 @@ LEFT JOIN tb_user_dep_meeting m ON temp.parentId = m.id ORDER BY temp.meetingDat
 
    </select>
 
-	<select id="getMyBedMeeting"
-			resultType="com.api.entity.MyMeetingInfoRecord">
+    <select id="getMyBedMeeting"
+            resultType="com.api.entity.MyMeetingInfoRecord">
 
 		SELECT temp.*,m.name as department FROM
 		(SELECT b.id,b.bookUser, b.threaf,b.meetingDate,b.meetingroom,b.startTime,b.endTime,
@@ -83,5 +83,71 @@ LEFT JOIN tb_user_dep_meeting m ON temp.parentId = m.id ORDER BY temp.meetingDat
 		LEFT JOIN tb_user_dep_meeting m ON temp.parentId = m.id ORDER BY temp.meetingDate DESC  LIMIT #{count}
 
 	</select>
+
+    <update id="updateMeetingInfoById"
+            parameterType="com.api.entity.BookMeetingDbInfoRecord">
+        UPDATE tb_bookmeeting
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="null != meetingDate and '' != meetingDate">
+                meetingDate = #{meetingDate} ,
+            </if>
+
+            <if test="amOrPm != reason and '' != amOrPm">
+                amOrPm = #{amOrPm},
+            </if>
+
+            <if test="null != startTime and '' != startTime">
+                startTime = #{startTime},
+            </if>
+
+            <if test="null != endTime and '' != endTime">
+                startTime = #{startTime},
+            </if>
+
+            <if test="null != meetingroom and '' != meetingroom">
+                meetingroom = #{meetingroom},
+            </if>
+
+            <if test="null != threaf and '' != threaf">
+                threaf = #{threaf},
+            </if>
+
+            <if test="null != content and '' != content">
+                content = #{content},
+            </if>
+
+            <if test="null != person and '' != person">
+                person = #{person},
+            </if>
+
+            <if test="null != personName and '' != personName">
+                personName = #{personName},
+            </if>
+
+            <if test="null != clothes and '' != clothes">
+                clothes = #{clothes},
+            </if>
+
+            <if test="null != meetingDiscipline and '' != meetingDiscipline">
+                meetingDiscipline = #{meetingDiscipline},
+            </if>
+
+            <if test="null != connectPerson and '' != connectPerson">
+                connectPerson = #{connectPerson},
+            </if>
+
+            <if test="null != connectPhone and '' != connectPhone">
+                connectPhone = #{connectPhone},
+            </if>
+
+            <if test="null != remark and '' != remark">
+                remark = #{remark},
+            </if>
+
+        </trim>
+
+        where id = #{id}
+    </update>
 
 </mapper>

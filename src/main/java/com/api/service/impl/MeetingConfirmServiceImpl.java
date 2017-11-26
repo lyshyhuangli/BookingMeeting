@@ -4,9 +4,13 @@ import com.api.entity.MeetingConfirmRecord;
 import com.api.mapper.MeetingConfirmMapper;
 import com.api.service.MeetingConfirmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
+@Transactional
 public class MeetingConfirmServiceImpl implements MeetingConfirmService
 {
     @Autowired

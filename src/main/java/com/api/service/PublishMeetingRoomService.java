@@ -60,4 +60,11 @@ public interface PublishMeetingRoomService
                                               String date1,  String date2,
                                               String date3, String personId,int count);
 
+    /**
+     * 更新会议信息
+     * @param info
+     * @return
+     */
+    int updateMeetingInfoById(BookMeetingDbInfoRecord info);
+
 }

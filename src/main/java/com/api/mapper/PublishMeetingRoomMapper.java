@@ -63,5 +63,11 @@ public interface PublishMeetingRoomMapper
                                                 @Param("date3") String date3, @Param("personId") String personId,
                                                 @Param("count") int count);
 
+    /**
+     * 更新会议信息
+     * @param info
+     * @return
+     */
+    int updateMeetingInfoById(BookMeetingDbInfoRecord info);
 
 }

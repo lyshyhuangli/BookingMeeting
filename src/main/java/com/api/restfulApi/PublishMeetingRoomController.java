@@ -139,7 +139,6 @@ public class PublishMeetingRoomController
         info.setWakeType(req.getWakeType());
 
 
-        //获取本部门的所有会议室
         int result = publishMeetingRoomService.insertPublishMeeting(info);
         logger.info("result:" + result);
 
@@ -198,9 +197,9 @@ public class PublishMeetingRoomController
         }
 
         UserDepMeetingRecord userInfo = userDepMeetingService.getUserInfoByPhone(req.getPhone());
-        if (null != userInfo)
+        if (null == userInfo)
         {
-            logger.info("result:" + userInfo.toString());
+            logger.error("result is null." );
             resp.setResultCode(ResultCode.COMMON_DB_OPERATE_ERROR.getCode());
             resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_DB_OPERATE_ERROR.getCode())));
             return resp;
@@ -224,7 +223,12 @@ public class PublishMeetingRoomController
                 String id = m.getPerson();
                 String[] ids = id.split(",");
                 List l = Arrays.asList(ids);
-                if (l.contains(userInfo.getId()))
+                if (l.contains(String.valueOf(userInfo.getId())))
+                {
+                    temp.add(m);
+                }
+
+                if(req.getPhone().equalsIgnoreCase(m.getBookUser()))
                 {
                     temp.add(m);
                 }
@@ -258,9 +262,9 @@ public class PublishMeetingRoomController
         }
 
         UserDepMeetingRecord userInfo = userDepMeetingService.getUserInfoByPhone(req.getPhone());
-        if (null != userInfo)
+        if (null == userInfo)
         {
-            logger.info("result:" + userInfo.toString());
+            logger.info("result is null");
             resp.setResultCode(ResultCode.COMMON_DB_OPERATE_ERROR.getCode());
             resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_DB_OPERATE_ERROR.getCode())));
             return resp;
@@ -289,6 +293,11 @@ public class PublishMeetingRoomController
                     temp.add(m);
                 }
 
+                if(req.getPhone().equalsIgnoreCase(m.getBookUser()))
+                {
+                    temp.add(m);
+                }
+
             }
         }
 
@@ -297,6 +306,56 @@ public class PublishMeetingRoomController
 
 
 
+    }
+
+    /**
+     * 更新会议信息
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/updateMeetingInfoById", method = {RequestMethod.POST})
+    public UpdateMeetingInfoByIdResp updateMeetingInfoById(@RequestBody UpdateMeetingInfoByIdReq req)
+    {
+        UpdateMeetingInfoByIdResp resp = new UpdateMeetingInfoByIdResp();
+        resp.setResultCode(ResultCode.SUCCESS.getCode());
+        resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.SUCCESS.getCode())));
+
+        if (null == req)
+        {
+            resp.setResultCode(ResultCode.COMMON_REQ_NULL.getCode());
+            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_REQ_NULL.getCode())));
+            return resp;
+        }
+
+        logger.info("req is " + req.toString());
+
+        BookMeetingDbInfoRecord info = new BookMeetingDbInfoRecord();
+        info.setAmOrPm(req.getAmOrPm());
+        info.setBookUser(req.getBookUser());
+        info.setClothes(req.getClothes());
+        info.setConnectPerson(req.getConnectPerson());
+        info.setConnectPhone(req.getConnectPhone());
+        info.setContent(req.getContent());
+        info.setCreateTime(req.getCreateTime());
+        info.setEndTime(req.getEndTime());
+        info.setFiles(req.getFiles());
+        info.setMeetingDate(req.getMeetingDate());
+        info.setMeetingDiscipline(req.getMeetingDiscipline());
+        info.setMeetingroom(req.getMeetingroom());
+        info.setPerson(req.getPerson());
+        info.setQRcode(req.getQRcode());
+        info.setRemark(req.getRemark());
+        info.setStartTime(req.getStartTime());
+        info.setThreaf(req.getThreaf());
+        info.setWakeType(req.getWakeType());
+
+
+        int result = publishMeetingRoomService.updateMeetingInfoById(info);
+        logger.info("result:" + result);
+
+        resp.setResult(result);
+        return resp;
     }
 
 

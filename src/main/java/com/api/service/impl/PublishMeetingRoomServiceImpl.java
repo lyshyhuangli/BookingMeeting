@@ -74,6 +74,7 @@ public class PublishMeetingRoomServiceImpl implements PublishMeetingRoomService
 
     /**
      * 获取跟我相关的已经完成的会议信息
+     *
      * @param bookUser
      * @param date1
      * @param date2
@@ -81,11 +82,22 @@ public class PublishMeetingRoomServiceImpl implements PublishMeetingRoomService
      * @param personId
      * @return
      */
-    public List<MyMeetingInfoRecord> getMyBedMeeting( String bookUser,
-                                               String date1,  String date2,
-                                               String date3, String personId,int count)
+    public List<MyMeetingInfoRecord> getMyBedMeeting(
+            String bookUser, String date1, String date2, String date3, String personId, int count
+    )
     {
-        return publishMeetingRoomMapper.getMyBedMeeting(bookUser, date1, date2, date3, personId,count);
+        return publishMeetingRoomMapper.getMyBedMeeting(bookUser, date1, date2, date3, personId, count);
+    }
+
+    /**
+     * 更新会议信息
+     *
+     * @param info
+     * @return
+     */
+    public int updateMeetingInfoById(BookMeetingDbInfoRecord info)
+    {
+        return publishMeetingRoomMapper.updateMeetingInfoById(info);
     }
 
 }
