@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.api.mapper.MeetingConfirmMapper">
 
-    <insert id="insertMeetingConfirm"
+    <insert id="saveMeetingConfirm"
             parameterType="com.api.entity.MeetingConfirmRecord"
             useGeneratedKeys="true" keyProperty="id">
         insert into tb_meetingConfirm(meetingId, phone,userName,attendType,

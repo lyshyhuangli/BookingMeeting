@@ -14,12 +14,9 @@ public interface MeetingConfirmMapper
     /**
      * 保存和更新参会信息
      *
-     * @param phone
      * @return
      */
-    int saveMeetingConfirm(
-            @Param("meetingId") int meetingId, @Param("phone") String phone, @Param("userName") String userName, @Param("attendType") int attendType, @Param("reason") String reason
-    );
+    int saveMeetingConfirm(MeetingConfirmRecord info);
 
     /**
      * 更新参会信息

@@ -93,7 +93,7 @@ LEFT JOIN tb_user_dep_meeting m ON temp.parentId = m.id ORDER BY temp.meetingDat
                 meetingDate = #{meetingDate} ,
             </if>
 
-            <if test="amOrPm != reason and '' != amOrPm">
+            <if test="amOrPm != amOrPm and '' != amOrPm">
                 amOrPm = #{amOrPm},
             </if>
 

@@ -2,7 +2,10 @@ package com.api.service.impl;
 
 import com.api.entity.MeetingConfirmRecord;
 import com.api.mapper.MeetingConfirmMapper;
+import com.api.restfulApi.MeetingConfirmController;
 import com.api.service.MeetingConfirmService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +16,10 @@ import java.util.List;
 @Transactional
 public class MeetingConfirmServiceImpl implements MeetingConfirmService
 {
+
+
+    private static Log logger = LogFactory.getLog(MeetingConfirmServiceImpl.class);
+
     @Autowired
     private MeetingConfirmMapper meetingConfirmMapper;
 
@@ -27,7 +34,22 @@ public class MeetingConfirmServiceImpl implements MeetingConfirmService
             int meetingId, String phone, String userName, int attendType, String reason
     )
     {
-        return meetingConfirmMapper.saveMeetingConfirm(meetingId, phone, userName, attendType, reason);
+        try
+        {
+            MeetingConfirmRecord info = new MeetingConfirmRecord();
+            info.setAttendType(attendType);
+            info.setMeetingId(meetingId);
+            info.setPhone(phone);
+            info.setReason(reason);
+            info.setUserName(userName);
+
+            return meetingConfirmMapper.saveMeetingConfirm(info);
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage());
+            return 0;
+        }
 
     }
 

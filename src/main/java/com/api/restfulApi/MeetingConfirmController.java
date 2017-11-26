@@ -164,14 +164,22 @@ public class MeetingConfirmController
 
         MeetingConfirmRecord result = meetingConfirmService.getMeetingConfirmByMeetingIdAndPhone(req.getPhone(), req.getMeetingId());
 
+//        if (null == result)
+//        {
+//            resp.setResultCode(ResultCode.COMMON_DB_OPERATE_ERROR.getCode());
+//            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_DB_OPERATE_ERROR.getCode())));
+//            return resp;
+//        }
         if (null == result)
         {
-            resp.setResultCode(ResultCode.COMMON_DB_OPERATE_ERROR.getCode());
-            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_DB_OPERATE_ERROR.getCode())));
-            return resp;
+
+        }
+        else
+        {
+
+            logger.info("result is " + result.toString());
         }
 
-        logger.info("result is " + result.toString());
 
         resp.setInfo(result);
 

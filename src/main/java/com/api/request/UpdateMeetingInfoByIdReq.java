@@ -4,8 +4,6 @@ import com.api.common.CommonRequest;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import java.util.Date;
-
 public class UpdateMeetingInfoByIdReq extends CommonRequest
 {
 
@@ -27,7 +25,7 @@ public class UpdateMeetingInfoByIdReq extends CommonRequest
     private String connectPhone;
     private String files;
     private byte[] QRcode;
-    private Date createTime;
+    private String createTime;
     private String remark;
 
     public String getPersonName()
@@ -210,12 +208,12 @@ public class UpdateMeetingInfoByIdReq extends CommonRequest
         this.QRcode = QRcode;
     }
 
-    public Date getCreateTime()
+    public String getCreateTime()
     {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime)
+    public void setCreateTime(String createTime)
     {
         this.createTime = createTime;
     }

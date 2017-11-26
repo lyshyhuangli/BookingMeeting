@@ -288,7 +288,7 @@ public class PublishMeetingRoomController
                 String id = m.getPerson();
                 String[] ids = id.split(",");
                 List l = Arrays.asList(ids);
-                if (l.contains(userInfo.getId()))
+                if (l.contains(String.valueOf(userInfo.getId())))
                 {
                     temp.add(m);
                 }
@@ -331,6 +331,7 @@ public class PublishMeetingRoomController
         logger.info("req is " + req.toString());
 
         BookMeetingDbInfoRecord info = new BookMeetingDbInfoRecord();
+        info.setId(req.getId());
         info.setAmOrPm(req.getAmOrPm());
         info.setBookUser(req.getBookUser());
         info.setClothes(req.getClothes());
@@ -344,6 +345,7 @@ public class PublishMeetingRoomController
         info.setMeetingDiscipline(req.getMeetingDiscipline());
         info.setMeetingroom(req.getMeetingroom());
         info.setPerson(req.getPerson());
+        info.setPersonName(req.getPersonName());
         info.setQRcode(req.getQRcode());
         info.setRemark(req.getRemark());
         info.setStartTime(req.getStartTime());
