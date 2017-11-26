@@ -39,12 +39,12 @@ AND d.meetingDate = #{dateStr}
             useGeneratedKeys="true" keyProperty="id">
 		insert into tb_bookmeeting(bookUser, meetingDate,amOrPm,startTime,
 		endTime,meetingroom,threaf,content,person,clothes,wakeType,meetingDiscipline,
-		connectPerson,connectPhone,files,QRcode,createTime,remark)
+		connectPerson,connectPhone,files,QRcode,createTime,remark,personName)
 		values(#{bookUser}, #{meetingDate}, #{amOrPm}, #{startTime},
 		 #{endTime}, #{meetingroom}, #{threaf}, #{content}, #{person}
 		 , #{clothes}, #{wakeType}, #{meetingDiscipline}, #{connectPerson},
 		 #{connectPhone}, #{files}, #{QRcode}, #{createTime},
-		 #{remark})
+		 #{remark},#{personName})
 	</insert>
 
     <select id="getMeetingInfoById"

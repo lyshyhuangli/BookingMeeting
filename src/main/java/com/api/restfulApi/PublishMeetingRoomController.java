@@ -132,6 +132,7 @@ public class PublishMeetingRoomController
         info.setMeetingDiscipline(req.getMeetingDiscipline());
         info.setMeetingroom(req.getMeetingroom());
         info.setPerson(req.getPerson());
+        info.setPersonName(req.getPersonName());
         info.setQRcode(req.getQRcode());
         info.setRemark(req.getRemark());
         info.setStartTime(req.getStartTime());
