@@ -8,6 +8,7 @@ import com.api.service.PublishMeetingRoomService;
 import com.api.service.UserDepMeetingService;
 import com.api.utils.CommonUtils;
 import com.api.utils.PropertyUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,12 +139,33 @@ public class PublishMeetingRoomController
         info.setStartTime(req.getStartTime());
         info.setThreaf(req.getThreaf());
         info.setWakeType(req.getWakeType());
+        info.setDepartmentName(req.getDepartmentName());
+
+        synchronized (this)
+        {
+            BookMeetingDbInfoRecord db = publishMeetingRoomService.
+                    checkMeetingInfoByDateAmPmRoomId(info.getMeetingDate(), info.getAmOrPm(), Integer.parseInt(info.getMeetingroom()));
 
 
-        int result = publishMeetingRoomService.insertPublishMeeting(info);
-        logger.info("result:" + result);
+            if (null != db && StringUtils.isNotBlank(db.getBookUser()))
+            {
+                resp.setResultCode(ResultCode.MEETING_IS_BOOKED.getCode());
+                resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.MEETING_IS_BOOKED.getCode())));
+                logger.error("result: meeting room is already booked.");
+                resp.setResult(ResultCode.MEETING_IS_BOOKED.getCode());
+                return resp;
+            }
+            else
+            {
+                int result = publishMeetingRoomService.insertPublishMeeting(info);
+                logger.info("result:" + result);
 
-        resp.setResult(result);
+                resp.setResult(result);
+            }
+
+        }
+
+
         return resp;
     }
 
@@ -200,7 +222,7 @@ public class PublishMeetingRoomController
         UserDepMeetingRecord userInfo = userDepMeetingService.getUserInfoByPhone(req.getPhone());
         if (null == userInfo)
         {
-            logger.error("result is null." );
+            logger.error("result is null.");
             resp.setResultCode(ResultCode.COMMON_DB_OPERATE_ERROR.getCode());
             resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_DB_OPERATE_ERROR.getCode())));
             return resp;
@@ -213,23 +235,23 @@ public class PublishMeetingRoomController
         String date3 = CommonUtils.getSpecifiedDayAfter(2);
 
         //获取
-        List<MyMeetingInfoRecord> result = publishMeetingRoomService.getMyBeingMeeting(req.getPhone(),
-                date1, date2, date3, String.valueOf(userInfo.getId()));
+        List<MyMeetingInfoRecord> result = publishMeetingRoomService.getMyBeingMeeting(req.getPhone(), date1, date2, date3, String.valueOf(userInfo.getId()));
         logger.info("result:" + result);
         List<MyMeetingInfoRecord> temp = new ArrayList<MyMeetingInfoRecord>();
         if (null != result)
         {
             for (MyMeetingInfoRecord m : result)
             {
-                String id = m.getPerson();
-                String[] ids = id.split(",");
-                List l = Arrays.asList(ids);
-                if (l.contains(String.valueOf(userInfo.getId())))
+                if (req.getPhone().equalsIgnoreCase(m.getBookUser()))
                 {
                     temp.add(m);
+                    continue;
                 }
 
-                if(req.getPhone().equalsIgnoreCase(m.getBookUser()))
+                String id = m.getPerson();
+                String[] ids = id.split(",");
+                List<String> l = Arrays.asList(ids);
+                if (l.contains(String.valueOf(userInfo.getId())))
                 {
                     temp.add(m);
                 }
@@ -278,14 +300,19 @@ public class PublishMeetingRoomController
         String date3 = CommonUtils.getSpecifiedDayAfter(2);
 
         //获取
-        List<MyMeetingInfoRecord> result = publishMeetingRoomService.getMyBedMeeting(req.getPhone(),
-                date1, date2, date3, String.valueOf(userInfo.getId()),req.getCount());
+        List<MyMeetingInfoRecord> result = publishMeetingRoomService.getMyBedMeeting(req.getPhone(), date1, date2, date3, String.valueOf(userInfo.getId()), req.getCount());
         logger.info("result:" + result);
         List<MyMeetingInfoRecord> temp = new ArrayList<MyMeetingInfoRecord>();
         if (null != result)
         {
             for (MyMeetingInfoRecord m : result)
             {
+                if (req.getPhone().equalsIgnoreCase(m.getBookUser()))
+                {
+                    temp.add(m);
+                    continue;
+                }
+
                 String id = m.getPerson();
                 String[] ids = id.split(",");
                 List l = Arrays.asList(ids);
@@ -293,18 +320,11 @@ public class PublishMeetingRoomController
                 {
                     temp.add(m);
                 }
-
-                if(req.getPhone().equalsIgnoreCase(m.getBookUser()))
-                {
-                    temp.add(m);
-                }
-
             }
         }
 
         resp.setMyBedMeetingInfo(temp);
         return resp;
-
 
 
     }
@@ -352,6 +372,7 @@ public class PublishMeetingRoomController
         info.setStartTime(req.getStartTime());
         info.setThreaf(req.getThreaf());
         info.setWakeType(req.getWakeType());
+        info.setDepartmentName(req.getDepartmentName());
 
 
         int result = publishMeetingRoomService.updateMeetingInfoById(info);
@@ -361,5 +382,33 @@ public class PublishMeetingRoomController
         return resp;
     }
 
+    /**
+     * 取消会议
+     *
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/delMeetingInfoById", method = {RequestMethod.POST})
+    public DelMeetingInfoByIdResp delMeetingInfoById(@RequestBody DelMeetingInfoByIdReq req)
+    {
+        DelMeetingInfoByIdResp resp = new DelMeetingInfoByIdResp();
+        resp.setResultCode(ResultCode.SUCCESS.getCode());
+        resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.SUCCESS.getCode())));
+
+        if (null == req)
+        {
+            resp.setResultCode(ResultCode.COMMON_REQ_NULL.getCode());
+            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_REQ_NULL.getCode())));
+            return resp;
+        }
+
+        logger.info("req is " + req.toString());
+
+        int result = publishMeetingRoomService.deleteMeetingInfoById(req.getId());
+        logger.info("result:" + result);
+
+        resp.setResult(result);
+        return resp;
+    }
 
 }

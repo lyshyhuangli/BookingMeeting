@@ -24,4 +24,25 @@ public class UserDepMeetingServiceImpl implements UserDepMeetingService
     {
         return userDepMeetingMapper.getUserInfoByPhone(phone);
     }
+
+    /**
+     * 修改用户密码
+     *
+     * @param userName
+     * @param pwd
+     * @return
+     */
+    public boolean modifyPwdByUserName(String userName, String pwd)
+    {
+        int result = userDepMeetingMapper.modifyPwdByUserName(userName, pwd);
+
+        if (result != 0)
+        {
+            return true;
+        }
+
+        return false;
+
+    }
+
 }

@@ -30,7 +30,7 @@ FROM
 		AND b.type = 2
 	) c
 LEFT JOIN tb_bookmeeting d ON c.id = d.meetingroom
-AND d.meetingDate = #{dateStr}
+AND d.meetingDate = #{dateStr}  order by id
 
     </select>
 
@@ -39,12 +39,12 @@ AND d.meetingDate = #{dateStr}
             useGeneratedKeys="true" keyProperty="id">
 		insert into tb_bookmeeting(bookUser, meetingDate,amOrPm,startTime,
 		endTime,meetingroom,threaf,content,person,clothes,wakeType,meetingDiscipline,
-		connectPerson,connectPhone,files,QRcode,createTime,remark,personName)
+		connectPerson,connectPhone,files,QRcode,createTime,remark,personName,departmentName)
 		values(#{bookUser}, #{meetingDate}, #{amOrPm}, #{startTime},
 		 #{endTime}, #{meetingroom}, #{threaf}, #{content}, #{person}
 		 , #{clothes}, #{wakeType}, #{meetingDiscipline}, #{connectPerson},
 		 #{connectPhone}, #{files}, #{QRcode}, #{createTime},
-		 #{remark},#{personName})
+		 #{remark},#{personName},#{departmentName})
 	</insert>
 
     <select id="getMeetingInfoById"
@@ -54,33 +54,40 @@ AND d.meetingDate = #{dateStr}
 		WHERE id = #{id}
     </select>
 
+    <delete id="deleteMeetingInfoById"
+            >
+        delete
+        from tb_bookmeeting
+        WHERE id = #{id}
+    </delete>
+
     <select id="getMyBeingMeeting"
             resultType="com.api.entity.MyMeetingInfoRecord">
 
-SELECT temp.*,m.name as department FROM
-(SELECT b.id,b.bookUser, b.threaf,b.meetingDate,b.meetingroom,b.startTime,b.endTime,
+SELECT temp.* FROM
+(SELECT b.id,b.bookUser,b.departmentName as department, b.threaf,b.meetingDate,b.meetingroom,b.startTime,b.endTime,
 b.person,u.name,d.parentId from tb_bookmeeting b
 LEFT JOIN tb_user_dep_meeting u on b.meetingroom=u.id
 LEFT JOIN tb_user_dep_meeting d ON b.bookUser = d.phone
 where (b.bookUser =#{bookUser} or b.person like CONCAT('%',#{personId},'%'))
 and (b.meetingDate =#{date1} or b.meetingDate=#{date2} or b.meetingDate=#{date3})
 ) temp
-LEFT JOIN tb_user_dep_meeting m ON temp.parentId = m.id ORDER BY temp.meetingDate DESC
+ ORDER BY temp.meetingDate DESC
 
    </select>
 
     <select id="getMyBedMeeting"
             resultType="com.api.entity.MyMeetingInfoRecord">
 
-		SELECT temp.*,m.name as department FROM
-		(SELECT b.id,b.bookUser, b.threaf,b.meetingDate,b.meetingroom,b.startTime,b.endTime,
+		SELECT temp.* FROM
+		(SELECT b.id,b.bookUser,b.departmentName as department, b.threaf,b.meetingDate,b.meetingroom,b.startTime,b.endTime,
 		b.person,u.name,d.parentId from tb_bookmeeting b
 		LEFT JOIN tb_user_dep_meeting u on b.meetingroom=u.id
 		LEFT JOIN tb_user_dep_meeting d ON b.bookUser = d.phone
 		where (b.bookUser =#{bookUser} or b.person like CONCAT('%',#{personId},'%'))
 		and (b.meetingDate !=#{date1} and b.meetingDate !=#{date2} and b.meetingDate !=#{date3})
 		) temp
-		LEFT JOIN tb_user_dep_meeting m ON temp.parentId = m.id ORDER BY temp.meetingDate DESC  LIMIT #{count}
+		 ORDER BY temp.meetingDate DESC  LIMIT #{count}
 
 	</select>
 
@@ -145,9 +152,20 @@ LEFT JOIN tb_user_dep_meeting m ON temp.parentId = m.id ORDER BY temp.meetingDat
                 remark = #{remark},
             </if>
 
+            <if test="null != departmentName and '' != departmentName">
+                departmentName = #{departmentName},
+            </if>
+
         </trim>
 
         where id = #{id}
     </update>
+
+    <select id="checkMeetingInfoByDateAmPmRoomId"
+            resultType="com.api.entity.BookMeetingDbInfoRecord">
+        select *
+        from tb_bookmeeting
+        WHERE meetingDate = #{meetingDate} and amOrPm=#{amOrPm} and meetingroom=#{meetingroom}
+    </select>
 
 </mapper>

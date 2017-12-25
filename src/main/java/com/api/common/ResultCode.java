@@ -11,6 +11,8 @@ public enum ResultCode
 
     COMMON_PARAM_INVALID(10003),
 
+    MEETING_IS_BOOKED(10004),
+
     SUCCESS(0);
 
     private int code;

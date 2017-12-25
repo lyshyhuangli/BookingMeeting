@@ -31,7 +31,7 @@ public class MeetingConfirmServiceImpl implements MeetingConfirmService
      * @return
      */
     public int saveMeetingConfirm(
-            int meetingId, String phone, String userName, int attendType, String reason
+            int meetingId, String phone, String userName, int attendType, String reason,int isSign
     )
     {
         try
@@ -42,6 +42,7 @@ public class MeetingConfirmServiceImpl implements MeetingConfirmService
             info.setPhone(phone);
             info.setReason(reason);
             info.setUserName(userName);
+            info.setIsSign(isSign);
 
             return meetingConfirmMapper.saveMeetingConfirm(info);
         }

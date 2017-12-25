@@ -56,6 +56,15 @@ public class PublishMeetingRoomServiceImpl implements PublishMeetingRoomService
     }
 
     /**
+     *取消会议
+     */
+    public int deleteMeetingInfoById(int id)
+    {
+
+        return publishMeetingRoomMapper.deleteMeetingInfoById(id);
+    }
+
+    /**
      * 获取跟我相关的3天会议信息
      *
      * @param bookUser
@@ -99,5 +108,21 @@ public class PublishMeetingRoomServiceImpl implements PublishMeetingRoomService
     {
         return publishMeetingRoomMapper.updateMeetingInfoById(info);
     }
+
+    /**
+     * 查询会议室是否被占用
+     *
+     * @param meetingDate
+     * @param amOrPm
+     * @param meetingroom
+     * @return
+     */
+    public BookMeetingDbInfoRecord checkMeetingInfoByDateAmPmRoomId(
+            String meetingDate, String amOrPm, int meetingroom
+    )
+    {
+        return publishMeetingRoomMapper.checkMeetingInfoByDateAmPmRoomId(meetingDate, amOrPm, meetingroom);
+    }
+
 
 }

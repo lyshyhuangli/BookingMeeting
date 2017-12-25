@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.mapper.BookingDiningMapper">
+
+    <insert id="saveBookingDining"
+            parameterType="com.api.entity.BookingDiningRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into tb_bookingdining(bookerUser, diningRoom,diningDate,diningTypeNumber,diningType,content)
+        values(#{bookerUser}, #{diningRoom}, #{diningDate},#{diningTypeNumber}, #{diningType}, #{content})
+    </insert>
+
+    <update id="updateBookingDiningById">
+        UPDATE tb_bookingdining
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="null != bookerUser and '' != bookerUser">
+                bookerUser = #{bookerUser} ,
+            </if>
+
+            <if test="null != diningRoom and '' != diningRoom">
+                diningRoom = #{diningRoom} ,
+            </if>
+            <if test="null != diningDate and '' != diningDate">
+                diningDate = #{diningDate} ,
+            </if>
+
+            <if test="null != diningTypeNumber and '' != diningTypeNumber">
+                diningTypeNumber = #{diningTypeNumber} ,
+            </if>
+
+            <if test="null != diningType and '' != diningType">
+                diningType = #{diningType},
+            </if>
+
+            <if test="null != content and '' != content">
+                content = #{content},
+            </if>
+
+        </trim>
+
+        where id = #{id}
+    </update>
+
+    <select id="getAllBookingDining"
+            resultType="com.api.entity.BookingDiningRecord">
+        select
+        *
+        from
+        tb_bookingdining ORDER by diningDate desc,diningTypeNumber DESC LIMIT #{count}
+    </select>
+
+    <select id="getBookingDiningById"
+            resultType="com.api.entity.BookingDiningRecord">
+        select
+        *
+        from
+        tb_bookingdining
+        where id = #{id}
+    </select>
+
+</mapper>

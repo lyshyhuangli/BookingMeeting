@@ -37,6 +37,11 @@ public interface PublishMeetingRoomMapper
     BookMeetingDbInfoRecord getMeetingInfoById(@Param("id") int id);
 
     /**
+     *取消会议
+     */
+    int deleteMeetingInfoById(@Param("id") int id);
+
+    /**
      * 获取跟我相关的3天会议信息
      * @param bookUser
      * @param date1
@@ -69,5 +74,16 @@ public interface PublishMeetingRoomMapper
      * @return
      */
     int updateMeetingInfoById(BookMeetingDbInfoRecord info);
+
+    /**
+     * 查询会议室是否被占用
+     * @param meetingDate
+     * @param amOrPm
+     * @param meetingroom
+     * @return
+     */
+    BookMeetingDbInfoRecord checkMeetingInfoByDateAmPmRoomId(@Param("meetingDate") String meetingDate,
+                                                             @Param("amOrPm") String amOrPm,
+                                                             @Param("meetingroom") int meetingroom);
 
 }

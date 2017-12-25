@@ -34,6 +34,11 @@ public interface PublishMeetingRoomService
     BookMeetingDbInfoRecord getMeetingInfoById(int id);
 
     /**
+     * 取消会议
+     */
+    int deleteMeetingInfoById(int id);
+
+    /**
      * 获取跟我相关的3天会议信息
      *
      * @param bookUser
@@ -49,6 +54,7 @@ public interface PublishMeetingRoomService
 
     /**
      * 获取跟我相关的已经完成的会议信息
+     *
      * @param bookUser
      * @param date1
      * @param date2
@@ -56,15 +62,28 @@ public interface PublishMeetingRoomService
      * @param personId
      * @return
      */
-    List<MyMeetingInfoRecord> getMyBedMeeting( String bookUser,
-                                              String date1,  String date2,
-                                              String date3, String personId,int count);
+    List<MyMeetingInfoRecord> getMyBedMeeting(
+            String bookUser, String date1, String date2, String date3, String personId, int count
+    );
 
     /**
      * 更新会议信息
+     *
      * @param info
      * @return
      */
     int updateMeetingInfoById(BookMeetingDbInfoRecord info);
+
+    /**
+     * 查询会议室是否被占用
+     *
+     * @param meetingDate
+     * @param amOrPm
+     * @param meetingroom
+     * @return
+     */
+    BookMeetingDbInfoRecord checkMeetingInfoByDateAmPmRoomId(
+            String meetingDate, String amOrPm, int meetingroom
+    );
 
 }

@@ -14,4 +14,14 @@ public interface UserDepMeetingMapper
      * @return
      */
     UserDepMeetingRecord getUserInfoByPhone(@Param("phone") String phone);
+
+    /**
+     * 修改用户密码
+     *
+     * @param userName
+     * @param pwd
+     * @return
+     */
+    int modifyPwdByUserName(@Param("userName") String userName, @Param("pwd") String pwd);
+
 }

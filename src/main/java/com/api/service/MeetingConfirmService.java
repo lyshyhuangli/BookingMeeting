@@ -13,7 +13,7 @@ public interface MeetingConfirmService
      * @return
      */
     int saveMeetingConfirm(
-            int meetingId, String phone, String userName, int attendType, String reason
+            int meetingId, String phone, String userName, int attendType, String reason,int isSign
     );
 
     /**

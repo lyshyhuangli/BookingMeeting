@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.mapper.CookBookMapper">
+
+    <insert id="saveCookBook"
+            parameterType="com.api.entity.CookBookRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into tb_cookBook(publishUser, publishDate,menuType,menuTypeNumber,menuContent)
+        values(#{publishUser}, #{publishDate}, #{menuType},#{menuTypeNumber}, #{menuContent})
+    </insert>
+
+    <update id="updateCookBookById">
+        UPDATE tb_cookBook
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="null != menuType and '' != menuType">
+                menuType = #{menuType} ,
+            </if>
+            <if test="null != menuTypeNumber and '' != menuTypeNumber">
+                menuTypeNumber = #{menuTypeNumber} ,
+            </if>
+
+            <if test="null != publishDate and '' != publishDate">
+                publishDate = #{publishDate} ,
+            </if>
+
+            <if test="null != menuContent and '' != menuContent">
+                menuContent = #{menuContent},
+            </if>
+
+        </trim>
+
+        where id = #{id}
+    </update>
+
+    <select id="getAllCookBook"
+            resultType="com.api.entity.CookBookRecord">
+        select
+        *
+        from
+        tb_cookBook ORDER by publishDate desc,menuTypeNumber DESC LIMIT #{count}
+    </select>
+
+    <select id="getCookBookById"
+            resultType="com.api.entity.CookBookRecord">
+        select
+        *
+        from
+        tb_cookBook
+        where id = #{id}
+    </select>
+
+</mapper>

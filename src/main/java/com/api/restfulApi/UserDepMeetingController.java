@@ -3,10 +3,12 @@ package com.api.restfulApi;
 import com.api.common.ResultCode;
 import com.api.entity.GroupPersonRecord;
 import com.api.entity.UserDepMeetingRecord;
+import com.api.request.CheckUserByUserAndPwdReq;
 import com.api.request.GetGroupPersonByIdReq;
 import com.api.request.GetUserInfoByPhoneReq;
 import com.api.response.GetGroupPersonByIdResp;
 import com.api.response.GetUserInfoByPhoneResp;
+import com.api.response.ModifyPwdByUserNameResp;
 import com.api.service.GroupPersonService;
 import com.api.service.UserDepMeetingService;
 import com.api.utils.PropertyUtil;
@@ -50,6 +52,33 @@ public class UserDepMeetingController
         }
 
         resp.setUserInfo(result);
+        return resp;
+    }
+
+    /**
+     * 修改用户密码
+     *
+     * @return
+     */
+    @RequestMapping(value = "/modifyPwdByUserName", method = {RequestMethod.POST})
+    public ModifyPwdByUserNameResp modifyPwdByUserName(@RequestBody CheckUserByUserAndPwdReq req)
+    {
+        ModifyPwdByUserNameResp resp = new ModifyPwdByUserNameResp();
+        resp.setResultCode(ResultCode.SUCCESS.getCode());
+        resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.SUCCESS.getCode())));
+
+        if (null == req)
+        {
+            resp.setResultCode(ResultCode.COMMON_REQ_NULL.getCode());
+            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_REQ_NULL.getCode())));
+            return resp;
+        }
+
+        logger.info("usesrName:" + req.getUserName());
+        boolean result = userDepMeetingService.modifyPwdByUserName(req.getUserName(), req.getPwd());
+        logger.info("result:" + result);
+
+        resp.setIsOK(result);
         return resp;
     }
 

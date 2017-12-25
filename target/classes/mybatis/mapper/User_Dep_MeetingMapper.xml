@@ -25,6 +25,11 @@
         tb_user_dep_meeting where phone = #{phone}
     </select>
 
+    <update id="modifyPwdByUserName">
+        update tb_user_dep_meeting
+        set pwd = #{pwd} where phone  =  #{userName} and type =3
+    </update>
+
 
 
 </mapper>

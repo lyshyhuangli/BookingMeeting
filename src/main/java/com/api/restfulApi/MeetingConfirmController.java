@@ -1,22 +1,19 @@
 package com.api.restfulApi;
 
 import com.api.common.ResultCode;
+import com.api.entity.BookMeetingDbInfoRecord;
 import com.api.entity.MeetingConfirmRecord;
-import com.api.request.GetMeetingConfirmByMeetingIdAndPhoneReq;
-import com.api.request.GetMeetingConfirmByMeetingIdReq;
-import com.api.request.SaveMeetingConfirmReq;
-import com.api.request.UpdateMeetingConfirmByMeetingIdAndPhoneReq;
-import com.api.response.GetMeetingConfirmByMeetingIdAndPhoneResp;
-import com.api.response.GetMeetingConfirmByMeetingIdResp;
-import com.api.response.SaveMeetingConfirmResp;
-import com.api.response.UpdateMeetingConfirmByMeetingIdAndPhoneResp;
+import com.api.request.*;
+import com.api.response.*;
 import com.api.service.MeetingConfirmService;
+import com.api.service.PublishMeetingRoomService;
 import com.api.utils.PropertyUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,6 +26,9 @@ public class MeetingConfirmController
 
     @Autowired
     private MeetingConfirmService meetingConfirmService;
+
+    @Autowired
+    private PublishMeetingRoomService publishMeetingRoomService;
 
     /**
      * 保存参会信息
@@ -52,7 +52,8 @@ public class MeetingConfirmController
 
         logger.info("req is " + req.toString());
 
-        int result = meetingConfirmService.saveMeetingConfirm(req.getMeetingId(), req.getPhone(), req.getUserName(), req.getAttendType(), req.getReason());
+        int result = meetingConfirmService.saveMeetingConfirm(req.getMeetingId(), req.getPhone(),
+                req.getUserName(), req.getAttendType(), req.getReason(), req.getIsSign());
 
         if (0 == result)
         {
@@ -172,7 +173,7 @@ public class MeetingConfirmController
 //        }
         if (null == result)
         {
-
+            logger.error("result is null");
         }
         else
         {
@@ -182,6 +183,97 @@ public class MeetingConfirmController
 
 
         resp.setInfo(result);
+
+        return resp;
+    }
+
+    /**
+     * 根据meetingId查看参加情况
+     *
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/viewMeetingConfirmInfoByMeetingId", method = {RequestMethod.POST})
+    public ViewMeetingConfirmInfoResp viewMeetingConfirmInfoByMeetingId(@RequestBody ViewMeetingConfirmInfoReq req)
+    {
+        ViewMeetingConfirmInfoResp resp = new ViewMeetingConfirmInfoResp();
+        resp.setResultCode(ResultCode.SUCCESS.getCode());
+        resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.SUCCESS.getCode())));
+
+        if (null == req)
+        {
+            resp.setResultCode(ResultCode.COMMON_REQ_NULL.getCode());
+            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_REQ_NULL.getCode())));
+            return resp;
+        }
+
+        logger.info("req is " + req.toString());
+
+        //统计出未确认参加会议的信息
+        BookMeetingDbInfoRecord meetingInfo = publishMeetingRoomService.getMeetingInfoById(req.getMeetingId());
+        if(null == meetingInfo)
+        {
+            logger.error("Failed to get meetingInfo by id " + req.getMeetingId());
+            resp.setResultCode(ResultCode.COMMON_DB_OPERATE_ERROR.getCode());
+            resp.setResultDesc(PropertyUtil.getProperty(String.valueOf(ResultCode.COMMON_DB_OPERATE_ERROR.getCode())));
+            return resp;
+        }
+
+        //查询出有的参会信息
+        List<MeetingConfirmRecord> result = meetingConfirmService.getMeetingConfirmByMeetingId(req.getMeetingId());
+
+        if(null == result)
+        {
+            //为空表示参会人都还没有点击确认
+            List<MeetingConfirmRecord> r = new ArrayList<MeetingConfirmRecord>();
+            String name  = meetingInfo.getPersonName();
+            String[] names = name.split(",");
+
+            for(String s:names)
+            {
+                MeetingConfirmRecord  m = new MeetingConfirmRecord();
+                m.setIsSign(0);
+                m.setAttendType(0);
+                m.setUserName(s);
+                r.add(m);
+            }
+
+            resp.setInfo(r);
+        }
+        else
+        {
+            List<MeetingConfirmRecord> temp = new ArrayList<MeetingConfirmRecord>();
+
+            String name  = meetingInfo.getPersonName();
+            String[] names = name.split(",");
+            for(String s:names)
+            {
+                boolean isExist = false;
+                for (MeetingConfirmRecord m: result)
+                {
+                    if(m.getUserName().equals(s))
+                    {
+                        isExist = true;
+                        break;
+                    }
+
+                }
+
+                if(!isExist)
+                {
+                    MeetingConfirmRecord  m = new MeetingConfirmRecord();
+                    m.setIsSign(0);
+                    m.setAttendType(0);
+                    m.setUserName(s);
+                    temp.add(m);
+                }
+
+            }
+
+            resp.setInfo(result);
+            resp.getInfo().addAll(temp);
+        }
 
         return resp;
     }

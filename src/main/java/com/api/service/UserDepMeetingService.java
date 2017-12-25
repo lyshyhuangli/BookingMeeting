@@ -11,4 +11,13 @@ public interface UserDepMeetingService
      * @return
      */
     UserDepMeetingRecord getUserInfoByPhone(String phone);
+
+    /**
+     * 修改用户密码
+     * @param userName
+     * @param pwd
+     * @return
+     */
+    boolean modifyPwdByUserName(String userName,String pwd);
+
 }
