@@ -40,7 +40,9 @@
         select
         *
         from
-        tb_cookBook ORDER by publishDate desc,menuTypeNumber DESC LIMIT #{count}
+        tb_cookBook
+        where publishDate = DATE_SUB(curdate(),INTERVAL 0 DAY)
+        ORDER by publishDate desc,menuTypeNumber DESC LIMIT #{count}
     </select>
 
     <select id="getCookBookById"

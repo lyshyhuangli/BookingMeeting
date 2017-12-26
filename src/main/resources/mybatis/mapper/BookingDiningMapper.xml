@@ -48,7 +48,9 @@
         select
         *
         from
-        tb_bookingdining ORDER by diningDate desc,diningTypeNumber DESC LIMIT #{count}
+        tb_bookingdining
+         where diningDate = DATE_SUB(curdate(),INTERVAL 0 DAY)
+         ORDER by diningDate desc,diningTypeNumber DESC LIMIT #{count}
     </select>
 
     <select id="getBookingDiningById"
