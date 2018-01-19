@@ -1,22 +1,19 @@
 package com.api.response;
 
 import com.api.common.CommonResult;
-import com.api.entity.BookingDiningRecord;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import java.util.List;
-
-public class GetAllBookDiningResp extends CommonResult
+public class EditDepartmentResp extends CommonResult
 {
-    List<BookingDiningRecord> result;
+    private int result;
 
-    public List<BookingDiningRecord> getResult()
+    public int getResult()
     {
         return result;
     }
 
-    public void setResult(List<BookingDiningRecord> result)
+    public void setResult(int result)
     {
         this.result = result;
     }

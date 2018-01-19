@@ -15,6 +15,61 @@ public class UserDepMeetingRecord
     private String remark;
     private String role;
     private int type;
+    private int depSort;
+    private int meetingroomSort;
+    private int personSort;
+    private String post;
+    private String carId;
+
+    public int getDepSort()
+    {
+        return depSort;
+    }
+
+    public void setDepSort(int depSort)
+    {
+        this.depSort = depSort;
+    }
+
+    public int getMeetingroomSort()
+    {
+        return meetingroomSort;
+    }
+
+    public void setMeetingroomSort(int meetingroomSort)
+    {
+        this.meetingroomSort = meetingroomSort;
+    }
+
+    public int getPersonSort()
+    {
+        return personSort;
+    }
+
+    public void setPersonSort(int personSort)
+    {
+        this.personSort = personSort;
+    }
+
+    public String getPost()
+    {
+        return post;
+    }
+
+    public void setPost(String post)
+    {
+        this.post = post;
+    }
+
+    public String getCarId()
+    {
+        return carId;
+    }
+
+    public void setCarId(String carId)
+    {
+        this.carId = carId;
+    }
 
     private String parentName;
 

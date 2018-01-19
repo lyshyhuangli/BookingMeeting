@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.api.entity.UserDepMeetingRecord">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="pwd" jdbcType="VARCHAR" property="pwd"/>
+        <result column="parentId" jdbcType="INTEGER" property="parentId"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="idcard" jdbcType="VARCHAR" property="idcard"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="role" jdbcType="VARCHAR" property="role"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="depSort" jdbcType="INTEGER" property="depSort"/>
+        <result column="meetingroomSort" jdbcType="INTEGER" property="meetingroomSort"/>
+        <result column="personSort" jdbcType="INTEGER" property="personSort"/>
+        <result column="post" jdbcType="VARCHAR" property="post"/>
+        <result column="carId" jdbcType="VARCHAR" property="carId"/>
+
+    </resultMap>
+
+    <select id="getUserInfoByPhone"
+            resultType="com.api.entity.UserDepMeetingRecord">
+        select
+        *
+        from
+        tb_user_dep_meeting where phone = #{phone}
+    </select>
+
+    <update id="modifyPwdByUserName">
+        update tb_user_dep_meeting
+        set pwd = #{pwd} where phone  =  #{userName} and type =3
+    </update>
+
+    <insert id="addUserInfo"
+            parameterType="com.api.entity.UserDepMeetingRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into tb_user_dep_meeting(name, parentId,remark,type,phone,sex,idcard,role,personSort,post,carId)
+        values(#{name}, #{parentId}, #{remark},#{type}, #{phone},#{sex},#{idcard},#{role},#{personSort},#{post},#{carId})
+    </insert>
+
+    <select id="getMaxPersonSort" resultType="Integer">
+        select max(personSort)+2 from tb_user_dep_meeting where type =3 and parentId= #{parentId}
+    </select>
+
+
+
+    <update id="editUserInfo">
+        UPDATE tb_user_dep_meeting
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="null != name and '' != name">
+                name = #{name} ,
+            </if>
+            <if test="null != parentId and '' != parentId">
+                parentId = #{parentId} ,
+            </if>
+
+            <if test="null != remark">
+                remark = #{remark} ,
+            </if>
+
+            <if test="null != personSort and '' != personSort">
+                personSort = #{personSort},
+            </if>
+
+            <if test="null != phone and '' != phone">
+                phone = #{phone},
+            </if>
+
+            <if test="null != sex and '' != sex">
+                sex = #{sex},
+            </if>
+
+            <if test="null != idcard and '' != idcard">
+                idcard = #{idcard},
+            </if>
+
+            <if test="null != post and '' != post">
+                post = #{post},
+            </if>
+
+            <if test="null != carId and '' != carId">
+                carId = #{carId},
+            </if>
+
+            <if test="null != role and '' != role">
+                role = #{role},
+            </if>
+
+        </trim>
+
+        where id = #{id} and type = 3
+    </update>
+
+
+
+</mapper>

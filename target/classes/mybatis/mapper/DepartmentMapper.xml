@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.mapper.DepartmentMapper">
+
+    <insert id="addDepartment"
+            parameterType="com.api.entity.UserDepMeetingRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into tb_user_dep_meeting(name, parentId,remark,type,depSort)
+        values(#{name}, #{parentId}, #{remark},#{type}, #{depSort})
+    </insert>
+
+    <select id="getMaxDepSort" resultType="Integer">
+       select max(depSort)+2 from tb_user_dep_meeting
+    </select>
+
+    <update id="editDepartment">
+        UPDATE tb_user_dep_meeting
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="null != name and '' != name">
+                name = #{name} ,
+            </if>
+            <if test="null != parentId and '' != parentId">
+                parentId = #{parentId} ,
+            </if>
+
+            <if test="null != remark">
+                remark = #{remark} ,
+            </if>
+
+            <if test="null != depSort and '' != depSort">
+                depSort = #{depSort},
+            </if>
+
+        </trim>
+
+        where id = #{id} and type = 1
+    </update>
+
+
+</mapper>

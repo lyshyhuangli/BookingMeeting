@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.mapper.MeetingRoomMapper">
+
+    <insert id="addMeetingRoom"
+            parameterType="com.api.entity.UserDepMeetingRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into tb_user_dep_meeting(name, parentId,remark,type,meetingroomSort)
+        values(#{name}, #{parentId}, #{remark},#{type}, #{meetingroomSort})
+    </insert>
+
+    <select id="getMaxMeetingRoomSort" resultType="Integer">
+       select max(meetingroomSort)+2 from tb_user_dep_meeting where type =2 and parentId= #{parentId}
+    </select>
+
+    <update id="editMeetingRoom">
+        UPDATE tb_user_dep_meeting
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="null != name and '' != name">
+                name = #{name} ,
+            </if>
+            <if test="null != parentId and '' != parentId">
+                parentId = #{parentId} ,
+            </if>
+
+            <if test="null != remark">
+                remark = #{remark} ,
+            </if>
+
+            <if test="null != meetingroomSort and '' != meetingroomSort">
+                meetingroomSort = #{meetingroomSort},
+            </if>
+
+        </trim>
+
+        where id = #{id} and type = 2
+    </update>
+
+
+</mapper>

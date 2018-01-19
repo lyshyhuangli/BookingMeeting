@@ -5,7 +5,7 @@ import com.api.entity.*;
 import com.api.request.*;
 import com.api.response.*;
 import com.api.service.PublishMeetingRoomService;
-import com.api.service.UserDepMeetingService;
+import com.api.service.UserService;
 import com.api.utils.CommonUtils;
 import com.api.utils.PropertyUtil;
 import org.apache.commons.lang.StringUtils;
@@ -14,10 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/restfulApi", produces = "application/json;charset=UTF-8")
@@ -30,7 +28,7 @@ public class PublishMeetingRoomController
     private PublishMeetingRoomService publishMeetingRoomService;
 
     @Autowired
-    private UserDepMeetingService userDepMeetingService;
+    private UserService userService;
 
 
     @RequestMapping(value = "/getMyMeetingRoomByPhone", method = {RequestMethod.POST})
@@ -117,6 +115,9 @@ public class PublishMeetingRoomController
             return resp;
         }
 
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String dateTime = df.format(new Date());// new Date()为获取当前系统时间
+
         logger.info("req is " + req.toString());
 
         BookMeetingDbInfoRecord info = new BookMeetingDbInfoRecord();
@@ -126,7 +127,7 @@ public class PublishMeetingRoomController
         info.setConnectPerson(req.getConnectPerson());
         info.setConnectPhone(req.getConnectPhone());
         info.setContent(req.getContent());
-        info.setCreateTime(req.getCreateTime());
+        info.setCreateTime(dateTime);
         info.setEndTime(req.getEndTime());
         info.setFiles(req.getFiles());
         info.setMeetingDate(req.getMeetingDate());
@@ -219,7 +220,7 @@ public class PublishMeetingRoomController
             return resp;
         }
 
-        UserDepMeetingRecord userInfo = userDepMeetingService.getUserInfoByPhone(req.getPhone());
+        UserDepMeetingRecord userInfo = userService.getUserInfoByPhone(req.getPhone());
         if (null == userInfo)
         {
             logger.error("result is null.");
@@ -284,7 +285,7 @@ public class PublishMeetingRoomController
             return resp;
         }
 
-        UserDepMeetingRecord userInfo = userDepMeetingService.getUserInfoByPhone(req.getPhone());
+        UserDepMeetingRecord userInfo = userService.getUserInfoByPhone(req.getPhone());
         if (null == userInfo)
         {
             logger.info("result is null");
@@ -349,6 +350,9 @@ public class PublishMeetingRoomController
             return resp;
         }
 
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String dateTime = df.format(new Date());// new Date()为获取当前系统时间
+
         logger.info("req is " + req.toString());
 
         BookMeetingDbInfoRecord info = new BookMeetingDbInfoRecord();
@@ -359,7 +363,7 @@ public class PublishMeetingRoomController
         info.setConnectPerson(req.getConnectPerson());
         info.setConnectPhone(req.getConnectPhone());
         info.setContent(req.getContent());
-        info.setCreateTime(req.getCreateTime());
+        info.setCreateTime(dateTime);
         info.setEndTime(req.getEndTime());
         info.setFiles(req.getFiles());
         info.setMeetingDate(req.getMeetingDate());
@@ -373,7 +377,6 @@ public class PublishMeetingRoomController
         info.setThreaf(req.getThreaf());
         info.setWakeType(req.getWakeType());
         info.setDepartmentName(req.getDepartmentName());
-
 
         int result = publishMeetingRoomService.updateMeetingInfoById(info);
         logger.info("result:" + result);

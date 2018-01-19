@@ -47,7 +47,7 @@
         select
         *
         from
-        tb_meetingConfirm where meetingId = #{meetingId}
+        tb_meetingConfirm where meetingId = #{meetingId}  ORDER BY attendType DESC ,isSign DESC
     </select>
 
 </mapper>

@@ -66,13 +66,13 @@ AND d.meetingDate = #{dateStr}  order by id
 
 SELECT temp.* FROM
 (SELECT b.id,b.bookUser,b.departmentName as department, b.threaf,b.meetingDate,b.meetingroom,b.startTime,b.endTime,
-b.person,u.name,d.parentId from tb_bookmeeting b
+b.person,u.name,d.parentId,b.createTime from tb_bookmeeting b
 LEFT JOIN tb_user_dep_meeting u on b.meetingroom=u.id
 LEFT JOIN tb_user_dep_meeting d ON b.bookUser = d.phone
 where (b.bookUser =#{bookUser} or b.person like CONCAT('%',#{personId},'%'))
 and (b.meetingDate =#{date1} or b.meetingDate=#{date2} or b.meetingDate=#{date3})
 ) temp
- ORDER BY temp.meetingDate DESC
+ ORDER BY temp.meetingDate DESC,temp.startTime DESC
 
    </select>
 
@@ -81,13 +81,13 @@ and (b.meetingDate =#{date1} or b.meetingDate=#{date2} or b.meetingDate=#{date3}
 
 		SELECT temp.* FROM
 		(SELECT b.id,b.bookUser,b.departmentName as department, b.threaf,b.meetingDate,b.meetingroom,b.startTime,b.endTime,
-		b.person,u.name,d.parentId from tb_bookmeeting b
+		b.person,u.name,d.parentId,b.createTime from tb_bookmeeting b
 		LEFT JOIN tb_user_dep_meeting u on b.meetingroom=u.id
 		LEFT JOIN tb_user_dep_meeting d ON b.bookUser = d.phone
 		where (b.bookUser =#{bookUser} or b.person like CONCAT('%',#{personId},'%'))
 		and (b.meetingDate !=#{date1} and b.meetingDate !=#{date2} and b.meetingDate !=#{date3})
 		) temp
-		 ORDER BY temp.meetingDate DESC  LIMIT #{count}
+		 ORDER BY temp.meetingDate DESC,temp.startTime DESC  LIMIT #{count}
 
 	</select>
 
